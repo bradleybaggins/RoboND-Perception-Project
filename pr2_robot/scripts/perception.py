@@ -195,23 +195,56 @@ def pcl_callback(pcl_msg):
 def pr2_mover(object_list):
 
     # TODO: Initialize variables
-
+    object_list_param = []
+    object_name = []
+    object_group = []
+    labels = []
+    centroids = [] # to be list of tuples (x, y, z)
+    test_scene_num = Int32()
+    object_name = String()
+    arm_name = String()
+    pick_pose = Pose()
+    place_pose = Pose()
+    
     # TODO: Get/Read parameters
-
+    object_list_param = rospy.get_param('/object_list')
+    
     # TODO: Parse parameters into individual variables
+    object_name = ""
+    if object_list_param[i]['group'] == "green":
+        object_group = "right"
+    else: 
+        object_group = "left"
 
     # TODO: Rotate PR2 in place to capture side tables for the collision map
+    try: 
+        world_joint_controller
+        rospy.Publisher('/pr2/world_joint_controller/command')
+        except rospy.ROSInterruptException:
+            pass
 
+    
     # TODO: Loop through the pick list
-
+    for object in objects:
         # TODO: Get the PointCloud for a given object and obtain it's centroid
+        labels.append(object.label)
+        points_arr = ros_to_pcl(object.cloud).to_array()
+        centroids.append(np.asscalar(np.mean(points_arr, axis=0)[:3]))
 
         # TODO: Create 'place_pose' for the object
-
+        test_scene_num.data = 1
+        object_name.data = object_list_param[i]['name']
+        #pick_place_routine
+        pick_pose = centroids
+        #place_pose = 
+        
         # TODO: Assign the arm to be used for pick_place
-
+        arm_name.data = object_group
+        
         # TODO: Create a list of dictionaries (made with make_yaml_dict()) for later output to yaml format
-
+        yaml_dict = make_yaml_dict(test_scene_num, arm_name, object_name, pick_pose, place_pose)
+        dict_list.append(yaml_dict)
+        
         # Wait for 'pick_place_routine' service to come up
         rospy.wait_for_service('pick_place_routine')
 
@@ -227,13 +260,23 @@ def pr2_mover(object_list):
             print "Service call failed: %s"%e
 
     # TODO: Output your request parameters into output yaml file
-
+    send_to_yaml(yaml_filename, dict_list)
 
 
 if __name__ == '__main__':
     # TODO: ROS node initialization
-    rospy.init_node('clustering', anonymous=True)
-    
+    rospy.init_node('capture_node')
+
+    # Modify following list with items from pick_list_*.yaml
+    models = [\
+         'beer',
+         'bowl',
+         'create',
+         'disk_part',
+         'hammer',
+         'plastic_cup',
+         'soda_can']
+
     # TODO: Create Subscribers
     pcl_sub = rospy.Subscriber("/sensor_stick/point_cloud"), pc2.PointCloud2, pcl_callback, queue_size=1)
     
