@@ -151,23 +151,15 @@ def pcl_callback(pcl_msg):
         pcl_cluster = cloud_objects.extract(pts_list)
         # Compute the associated feature vector
         # TODO: convert the cluster from pcl to ROS using helper function
-        ros_cluster = pcl_to_ros(pcl_cluster)
+        sample_cloud = pcl_to_ros(pcl_cluster)
         # Extract histogram features
         # TODO: complete this step just as is covered in capture_features.py
-        def color_hist(ros_cluster, nbins=32, bins_range=(0, 256)):
-            # Convert from RGB to HSV using cv2.cvtColor()
-            hsv_img = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-            # Compute the histogram of the HSV channels separately
-            h_hist = np.histogram(hsv_img[:,:,0], bins=nbins, range=bins_range)
-            s_hist = np.histogram(hsv_img[:,:,1], bins=nbins, range=bins_range)
-            v_hist = np.histogram(hsv_img[:,:,2], bins=nbins, range=bins_range)
-            # Concatenate the histograms into a single feature vector
-            hist_features = np.concatenate((h_hist[0], s_hist[0], v_hist[0])).astype(np.float64)
-            # Normalize the result
-            norm_features = hist_features / np.sum(hist_features)
-            # Return the feature vector
-            return norm_features
-
+        chists = compute_color_histograms(sample_cloud, using_hsv=False)
+        normals = get_normals(sample_cloud)
+        nhists = compute_normal_histograms(normals)
+        feature = np.concatenate((chists, nhists))
+        labeled_features.append([feature, model_name])
+        
         # Make the prediction, retrieve the label for the result
         # and add it to detected_objects_labels list
         prediction = clf.predict(scaler.transform(feature.reshape(1,-1)))
