@@ -195,17 +195,22 @@ def pcl_callback(pcl_msg):
 def pr2_mover(object_list):
 
     # TODO: Initialize variables
-    object_list_param = []
-    object_name = []
-    object_group = []
-    labels = []
-    centroids = [] # to be list of tuples (x, y, z)
     test_scene_num = Int32()
     object_name = String()
     arm_name = String()
     pick_pose = Pose()
     place_pose = Pose()
     
+    test_scene_num.data = 1
+    dict_list = []
+    yam_filename = 'output_1.yaml'
+    object_list_param = []
+    object_name = []
+    object_group = []
+    labels = []
+    centroids = [] # to be list of tuples (x, y, z)
+    
+        
     # TODO: Get/Read parameters
     object_list_param = rospy.get_param('/object_list')
     
@@ -232,7 +237,6 @@ def pr2_mover(object_list):
         centroids.append(np.asscalar(np.mean(points_arr, axis=0)[:3]))
 
         # TODO: Create 'place_pose' for the object
-        test_scene_num.data = 1
         object_name.data = object_list_param[i]['name']
         #pick_place_routine
         pick_pose = centroids
@@ -278,7 +282,7 @@ if __name__ == '__main__':
          'soda_can']
 
     # TODO: Create Subscribers
-    pcl_sub = rospy.Subscriber("/sensor_stick/point_cloud"), pc2.PointCloud2, pcl_callback, queue_size=1)
+    pcl_sub = rospy.Subscriber("/sensor_stick/point_cloud", pc2.PointCloud2, pcl_callback, queue_size=1)
     
     # TODO: Create Publishers
     pcl_objects_pub = rospy.Publisher("/pcl_objects", PointCloud2, queue_size=1)
