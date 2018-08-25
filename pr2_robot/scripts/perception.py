@@ -209,38 +209,45 @@ def pr2_mover(object_list):
     object_group = []
     labels = []
     centroids = [] # to be list of tuples (x, y, z)
-    
-        
+            
     # TODO: Get/Read parameters
     object_list_param = rospy.get_param('/object_list')
+    dropbox_param = rospy.get_param('/dropbox')
     
     # TODO: Parse parameters into individual variables
     object_name = ""
-    if object_list_param[i]['group'] == "green":
-        object_group = "right"
-    else: 
-        object_group = "left"
+
 
     # TODO: Rotate PR2 in place to capture side tables for the collision map
     try: 
-        world_joint_controller
+        #world_joint_controller
         rospy.Publisher('/pr2/world_joint_controller/command')
         except rospy.ROSInterruptException:
             pass
 
-    
     # TODO: Loop through the pick list
-    for object in objects:
+    for object in object_list:
         # TODO: Get the PointCloud for a given object and obtain it's centroid
         labels.append(object.label)
         points_arr = ros_to_pcl(object.cloud).to_array()
-        centroids.append(np.asscalar(np.mean(points_arr, axis=0)[:3]))
+        centroids.append(np.mean(points_arr, axis=0)[:3])
+        
+        if object_list_param[object]['group'] == "green":
+            object_group = "right"
+        else: 
+            object_group = "left"
+        
+        if object_name.data == labels[object]:
+            pick_pose.position.x = np.asscalar(centroids[object][0])
+            pick_pose.position.y = np.asscalar(centroids[object][1])
+            pick_pose.position.z = np.asscalar(centroids[object][2])
 
         # TODO: Create 'place_pose' for the object
-        object_name.data = object_list_param[i]['name']
-        #pick_place_routine
-        pick_pose = centroids
-        #place_pose = 
+        for j in range(0, len(dropbox_param)):
+            if object_group == dropbox_param[j]['group']:
+               place_pose.position.x = dropbox_param[j]['position'][0]
+               place_pose.position.y = dropbox_param[j]['position'][1]
+               place_pose.position.z = dropbox_param[j]['position'][2]
         
         # TODO: Assign the arm to be used for pick_place
         arm_name.data = object_group
