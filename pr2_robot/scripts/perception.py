@@ -215,8 +215,8 @@ def pr2_mover(object_list):
     dropbox_param = rospy.get_param('/dropbox')
     
     # TODO: Parse parameters into individual variables
-    object_name = ""
-
+    object_name.data = []
+    object_group.data = []
 
     # TODO: Rotate PR2 in place to capture side tables for the collision map
     try: 
@@ -233,9 +233,9 @@ def pr2_mover(object_list):
         centroids.append(np.mean(points_arr, axis=0)[:3])
         
         if object_list_param[object]['group'] == "green":
-            object_group = "right"
+            object_group.data = "right"
         else: 
-            object_group = "left"
+            object_group.data = "left"
         
         if object_name.data == labels[object]:
             pick_pose.position.x = np.asscalar(centroids[object][0])
@@ -280,13 +280,9 @@ if __name__ == '__main__':
 
     # Modify following list with items from pick_list_*.yaml
     models = [\
-         'beer',
-         'bowl',
-         'create',
-         'disk_part',
-         'hammer',
-         'plastic_cup',
-         'soda_can']
+         'biscuits',
+         'soap',
+         'soap2']
 
     # TODO: Create Subscribers
     pcl_sub = rospy.Subscriber("/sensor_stick/point_cloud", pc2.PointCloud2, pcl_callback, queue_size=1)
