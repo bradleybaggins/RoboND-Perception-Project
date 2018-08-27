@@ -49,7 +49,7 @@ A yaml dictionary is compiled to contain all these identified labels and poses a
 
 ![demo-2](https://user-images.githubusercontent.com/20687560/28748286-9f65680e-7468-11e7-83dc-f1a32380b89c.png)
 
-Spend some time at the end to discuss your code, what techniques you used, what worked and why, where the implementation might fail and how you might improve it if you were going to pursue this project further.
+### Room For Improvement
 
 This project presented a significant struggle with the simulator environment and VM. I was not able to appropriately execute the code in the VM, because I consistently ran into Gazebo gui crashes. Gazebo crashing, despite what appears to be the correct model path, left me with just the robot itself loaded in RViz, without any items or collision map information.
 
