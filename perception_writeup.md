@@ -37,6 +37,6 @@ A yaml dictionary is compiled to contain all these identified labels and poses a
 This project presented a significant struggle with the simulator environment and VM. I was not able to appropriately execute the code in the VM, because I consistently ran into Gazebo gui crashes. Gazebo crashing, despite what appears to be the correct model path, left me with just the robot itself loaded in RViz, without any items or collision map information.
 
 ![error1](https://github.com/bradleybaggins/RoboND-Perception-Project/blob/master/Gazebo%20Popup.PNG)
-![error2](https://github.com/bradleybaggins/RoboND-Perception-Project/blob/master/Gazebo%20Error%20Message.PNG)
+![error2](https://github.com/bradleybaggins/RoboND-Perception-Project/blob/master/Gazebo%20Crash%20Message.PNG)
 
 I would have liked to attempt the extra challenges in the project. This model will run into struggles when introduced to additional complexity with more objects in its environment to classify. It also presents an interesting problem in navigating around obstacles to pick the correct object. I would also have liked to further refine the segmentation and classification pipeline to explore the cluster extraction approach in more detail.
